@@ -14,7 +14,7 @@ dotenv.config();
 
 const key = process.env.KEY;
 const saltRounds = 6;
-const tokenExpiery = { login: 10, mailVerification: 2, passwordReset: 2 };
+const tokenExpiery = { login: 10, passwordReset: 2 };
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -162,14 +162,12 @@ app.post("/register", async function (req, res) {
   } finally {
     client.close();
   }
-  let token_expiry = tokenExpiery["mailVerification"];
   let token = jwt.sign(
     { email: req.body["email"], type: "mailVerification" },
-    key,
-    { expiresIn: token_expiry + "m" }
+    key
   );
   let link = process.env.APPLINK + "login/" + token;
-  let text = `Follow link to verify email token is valid only for ${token_expiry} minute(s)`;
+  let text = `Follow link to verify email`;
   let result = await verificationMail(req.body["email"], link, text).catch(
     (err) => {
       res.status(500).json({ message: "filed to send mail" });
