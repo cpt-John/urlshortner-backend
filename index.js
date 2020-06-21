@@ -60,7 +60,7 @@ const collName1 = "users";
 const collName2 = "urls";
 //mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass%20Community&ssl=false
 const uri = `mongodb+srv://${process.env.D_EMAIL}:${process.env.D_PASSWORD}@cluster0-lyx1k.mongodb.net/UrlShortner?retryWrites=true&w=majority`;
-const uri = `mongodb://localhost:27017/?readPreference=primary&ssl=false`;
+// const uri = `mongodb://localhost:27017/?readPreference=primary&ssl=false`;
 const mongoClient = mongodb.MongoClient;
 
 app.post("/login", async function (req, res) {
