@@ -636,3 +636,28 @@ app.post("/deleteUrl", async function (req, res) {
     client.close();
   }
 });
+
+// for portfolio app not this app
+app.get("/getComments", async function (req, res) {
+  const client = await mongoClient
+    .connect(uri, {
+      useUnifiedTopology: true,
+    })
+    .catch((err) => {
+      res.status(500).json({ message: "filed to connect db" });
+    });
+  if (!client) {
+    return;
+  }
+  collection = client.db("Portfolio").collection("comments");
+  try {
+    let result = await collection.find({}).toArray();
+    res.status(200).json({ result });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "filed to retreive" });
+    return;
+  } finally {
+    client.close();
+  }
+});
