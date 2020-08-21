@@ -665,7 +665,7 @@ app.get("/getComments", async function (req, res) {
 app.post("/setComment", async function (req, res) {
   if (!req.body["name"] || !req.body["comment"]) {
     res.status(400).json({
-      message: "jwt or name or url missing",
+      message: "namr  or comment missing",
     });
     return;
   }
