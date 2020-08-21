@@ -637,6 +637,7 @@ app.post("/deleteUrl", async function (req, res) {
   }
 });
 
+// <---------------------------------------->
 // for portfolio app not this app
 app.get("/getComments", async function (req, res) {
   const client = await mongoClient
@@ -656,6 +657,39 @@ app.get("/getComments", async function (req, res) {
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "filed to retreive" });
+    return;
+  } finally {
+    client.close();
+  }
+});
+app.post("/setComment", async function (req, res) {
+  if (!req.body["name"] || !req.body["comment"]) {
+    res.status(400).json({
+      message: "jwt or name or url missing",
+    });
+    return;
+  }
+  const client = await mongoClient
+    .connect(uri, {
+      useUnifiedTopology: true,
+    })
+    .catch((err) => {
+      res.status(500).json({ message: "filed to connect db" });
+    });
+  if (!client) {
+    return;
+  }
+  let collection = client.db("Portfolio").collection("comments");
+  try {
+    let new_doc = {
+      name: req.body["name"],
+      comment: req.body["comment"],
+    };
+    let result = await collection.insertOne(new_doc);
+    if (result) res.status(200).json({ message: "added new comment" });
+  } catch (err) {
+    res.status(500).json({ message: "filed to add" });
+
     return;
   } finally {
     client.close();
